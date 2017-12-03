@@ -6,6 +6,10 @@
 # test 13 For the 32X32 frame and a 4X4 window size
 # The result should be 5, 16 since its the first of multiple repeating occurences
 asize13: .word    32, 32, 4, 4    #i, j, k, l
+window13:   .word    10, 10, 10, 10, 
+						.word    10, 10, 10, 10, 
+						.word    10, 10, 10, 10, 
+						.word    10, 10, 10, 10
 frame13: .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
 		 .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
 		 .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
@@ -39,12 +43,9 @@ frame13: .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 		 .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
 		 .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 					
-window13:   .word    10, 10, 10, 10, 
-			.word    10, 10, 10, 10, 
-			.word    10, 10, 10, 10, 
-			.word    10, 10, 10, 10
+
 		 
-newline: .asciiz     "\n" 
+#newline: .asciiz     "\n" 
 
 
 ########################################################################################################################
@@ -61,12 +62,15 @@ main:
 
 	# Start test 13
 	############################################################
-	la      $a0, asize13     # 1st parameter: address of asize13[0]
-	la      $a1, frame13     # 2nd parameter: address of frame13[0]
-	la      $a2, window13    # 3rd parameter: address of window13[0]   
+	#la      $a0, asize13     # 1st parameter: address of asize13[0]
+	add			$a0, $0, $0
+	#la      $a1, frame13     # 2nd parameter: address of frame13[0]
+	addi 		$a1, $0, 20
+	#la      $a2, window13    # 3rd parameter: address of window13[0]   
+	addi 		$a2, $0, 4
 
 	jal     vbsme           # call function
-	jal     print_result    # print results to console
+	#jal     print_result    # print results to console
 	############################################################
 	# End of test 13  
 	 
@@ -78,33 +82,33 @@ here:
 	j here
 
 ################### Print Result ####################################
-print_result:
+#print_result:
 	# Printing $v0
-	add     $a0, $v0, $zero     # Load $v0 for printing
-	li      $v0, 1              # Load the system call numbers
-	syscall
+#	add     $a0, $v0, $zero     # Load $v0 for printing
+#	li      $v0, 1              # Load the system call numbers
+#	syscall
 	 
 	# Print newline.
-	la      $a0, newline          # Load value for printing
-	li      $v0, 4                # Load the system call numbers
-	syscall
+#	la      $a0, newline          # Load value for printing
+#	li      $v0, 4                # Load the system call numbers
+#	syscall
 	 
 	# Printing $v1
-	add     $a0, $v1, $zero      # Load $v1 for printing
-	li      $v0, 1                # Load the system call numbers
-	syscall
+#	add     $a0, $v1, $zero      # Load $v1 for printing
+#	li      $v0, 1                # Load the system call numbers
+#	syscall
 
 	# Print newline.
-	la      $a0, newline          # Load value for printing
-	li      $v0, 4                # Load the system call numbers
-	syscall
+#	la      $a0, newline          # Load value for printing
+#	li      $v0, 4                # Load the system call numbers
+#	syscall
 	 
 	# Print newline.
-	la      $a0, newline          # Load value for printing
-	li      $v0, 4                # Load the system call numbers
-	syscall
+#	la      $a0, newline          # Load value for printing
+#	li      $v0, 4                # Load the system call numbers
+#	syscall
 	 
-	jr      $ra                   #function return
+#	jr      $ra                   #function return
 
 #####################################################################
 ### vbsme
@@ -216,12 +220,12 @@ print_result:
 
 # Begin subroutine
 vbsme:  
-	li $v0, 0							# reset $v0 
-	li $v1, 0							# reset $v1
+	add $v0, $0, $0							# reset $v0 
+	add $v1, $0, $0							# reset $v1
 
 	# insert your code here
-	li $s0, 2147483647		# Set minSAD to max int value
-	li $s1, 0							# Set currentSAD to 0
+	addi $s0, $0, 32767		# Set minSAD to max int value
+	add $s1, $0, $0							# Set currentSAD to 0
 	lw $s2, 0($a0)				# Set s2 to frame number of rows
 	lw $s3, 4($a0)				# Set s3 to frame number of columns
 	lw $s4, 8($a0)				# Set s4 to window number of rows
@@ -230,8 +234,8 @@ vbsme:
 	addi $s2, $s2, 1			# Since we're including the max, +1
 	sub $s3, $s3, $s5			# Set s3 to colMax = frameColSize - windowColSize
 	addi $s3, $s3, 1			# Since we're including the max, +1
-	li $t0, 0							# Set currentSpiralRow to 0
-	li $t1, 0							# Set currentSpiralCol to 0
+	add $t0, $0, $0							# Set currentSpiralRow to 0
+	add $t1, $0, $0							# Set currentSpiralCol to 0
 
 # Start while loop
 spiral:
@@ -249,7 +253,7 @@ iterColRight:
 												# currently at array[currentSpiralRow][i]
 	add $t8, $t0, $0			# Row for checkForMinSAD = currentSpiralRow
 	add $t9, $t4, $0			# Col for checkForMinSAD = i
-	sub $sp, $sp, 4				# Move the stack pointer to make space
+	addi $sp, $sp, -4				# Move the stack pointer to make space
 	sw $ra, 0($sp)				# [stack[$sp]=$ra] Backup return address
 	jal checkForMinSAD 		# checkForMinSAD at current location
 	lw $ra, 0($sp)				# Restore the return address
@@ -263,7 +267,7 @@ iterColRightExit:
 iterRowDownStart:
 	slt $t3, $t0, $s2			# Check if currentSpiralRow < rowMax
 	beq $t3, $0, iterRowUpStart	# If currentSpiralRow >= rowMax, go to iterRowUpStart
-	add $t4, $t0, 0				# Load currentSpiralRow into i
+	add $t4, $t0, $0				# Load currentSpiralRow into i
 
 iterRowDown:
 	slt $t3, $t4, $s2			# Check if iterator < rowMax
@@ -271,7 +275,7 @@ iterRowDown:
 												# currently at array[i][colMax-1]
 	add $t8, $t4, $0			# Row for checkForMinSAD = i
 	addi $t9, $s3, -1			# Col for checkForMinSAD = colMax - 1
-	sub $sp, $sp, 4				# Move the stack pointer to make space
+	addi $sp, $sp, -4				# Move the stack pointer to make space
 	sw $ra, 0($sp)				# [stack[$sp]=$ra] Backup return address
 	jal checkForMinSAD 			# checkForMinSAD at current location
 	lw $ra, 0($sp)				# Restore the return address
@@ -295,7 +299,7 @@ iterColLeft:
 												# currently at array[rowMax-1][i]
 	addi $t8, $s2, -1			# Row for checkForMinSAD = rowMax - 1
 	add $t9, $t4, $0			# Col for checkForMinSAD = i
-	sub $sp, $sp, 4				# Move the stack pointer to make space
+	addi $sp, $sp, -4				# Move the stack pointer to make space
 	sw $ra, 0($sp)				# [stack[$sp]=$ra] Backup return address
 	jal checkForMinSAD 		# checkForMinSAD at current location
 	lw $ra, 0($sp)				# Restore the return address
@@ -310,7 +314,7 @@ iterColLeftExit:
 iterRowUpStart:
 	slt $t3, $t1, $s3			# Check if currentSpiralCol < colMax
 	beq $t3, $0, spiral		# If currentSpiralCol > colMax, go back to start of spiral loop
-	add $t4, $s2, 0				# i = rowMax
+	add $t4, $s2, $0				# i = rowMax
 	addi $t4, $t4, -1			# i = rowMax - 1
 	addi $t0, $t0, -1			# this makes it not skip corners
 
@@ -320,7 +324,7 @@ iterRowUp:
 												# currently at array[i][l]
 	add $t8, $t4, $0			# Row for checkForMinSAD = i
 	add $t9, $t1, $0			# Col for checkForMinSAD = currentSpiralCol
-	sub $sp, $sp, 4				# Move the stack pointer to make space
+	addi $sp, $sp, -4				# Move the stack pointer to make space
 	sw $ra, 0($sp)				# [stack[$sp]=$ra] Backup return address
 	jal checkForMinSAD 		# checkForMinSAD at current location
 	lw $ra, 0($sp)				# Restore the return address
@@ -359,12 +363,12 @@ exitSpiral:
 
 # Checks the current position to see if SAD < minSAD. If yes, replace the variables
 checkForMinSAD:
-	li $s1, 0							# Set currentSAD to 0
-	li $t6, 0							# Set windowRowIterator to 0
-	li $t7, 0							# Set windowColIterator to 0
+	add $s1, $0, $0							# Set currentSAD to 0
+	add $t6, $0, $0							# Set windowRowIterator to 0
+	add $t7, $0, $0							# Set windowColIterator to 0
 
 loopRowSAD:
-	sub $sp, $sp, 4 			# Make space for ra 
+	addi $sp, $sp, -4 			# Make space for ra 
 	sw $ra, 0($sp) 				# Store ra
 	jal loopColSAD 				# goes to column loop for the row
 	lw $ra, 0($sp) 				# restore ra
@@ -386,7 +390,7 @@ loopRowSAD:
 	j exitCalcSAD					# return to spiral loops
 
 loopColSAD: 						# loop counting col position on frame (j), t9
-	sub $sp, $sp, 4				# Make space on stack
+	addi $sp, $sp, -4				# Make space on stack
 	sw $ra, 0($sp) 				# store ra
 	jal checkForDifference	# goes to check whether values are different
 	lw $ra, 0($sp)				# restore ra
@@ -395,7 +399,7 @@ loopColSAD: 						# loop counting col position on frame (j), t9
 	addi $t9, $t9, 1 			# j = j + 1 : frameCol will increment
 	addi $t7, $t7, 1 			# l = l + 1 : windowCol will increment
 	bne $t7, $s5, loopColSAD 	# repeats loop if windowCol != windowColSize
-	j $ra 								# return to lowRowSAD
+	jr $ra 								# return to lowRowSAD
 	
 checkForDifference: 		# checks for difference between frame and window
 	lw $t5, 4($a0)				# Load frame # of columns into t5
@@ -414,19 +418,19 @@ checkForDifference: 		# checks for difference between frame and window
 	lw $t2, 0($t2) 				# t2 = value of window[k][l]
 
 	bne $t5, $t2, calculateSAD # if window[k][l] != frameSize[i][j], SAD will be calculated
-	j $ra 								# return to loopColSad
+	jr $ra 								# return to loopColSad
 
 calculateSAD:
 	sub $s6, $t5, $t2 		# tempSAD = frame[i][j] - window[k][l]
 	slt $t3, $s6, $0 			# if tempSAD is < 0 (negative)
 	bne $t3, $0, calculateSADNegative # If negative, abs(tempSAD)
 	add $s1, $s1, $s6 		# currentSad = currentSad + tempSAD;
-	j $ra
+	jr $ra
 
 calculateSADNegative:
 	sub $s6, $t2, $t5 		# tempSAD = window[k][l] - frame[i][j]
 	add $s1, $s1, $s6 		# currentSad = currentSad + tempSAD;
-	j $ra 								# return to the SAD loop
+	jr $ra 								# return to the SAD loop
 
 exitCalcSAD:
 	jr $ra 								# return to the spiral loop
