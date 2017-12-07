@@ -113,7 +113,7 @@ module TopMod(
 	
 	JumpExtend IF_je(IF_NextAddress[31:28], ID_Instruction[25:0], JumpE_D);
 	
-	RegisterFile ID_RF(Clk, ID_Instruction[25:21], ID_Instruction[20:16], WriteReg, WriteData, C_RegWrite, RD1, RD2, v0, v1, s4);
+	RegisterFile ID_RF(Clk, Reset, ID_Instruction[25:21], ID_Instruction[20:16], WriteReg, WriteData, C_RegWrite, RD1, RD2, v0, v1, s4);
 	SignExtension ID_SE(ID_Instruction[15:0], SE_1);
 	ZeroExtension ID_ZE(ID_Instruction[15:0], SE_2);
 	Mux32 id_mux(SE_2, SE_1, SEControl, SE_In);
