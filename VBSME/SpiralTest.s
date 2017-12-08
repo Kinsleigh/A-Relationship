@@ -297,4 +297,3 @@ main:
 			add $v1, $t3, $zero
 			add $s4, $s7, $zero
 			jr $ra
-		
