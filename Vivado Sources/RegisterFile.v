@@ -64,6 +64,7 @@ module RegisterFile(
 		for(i = 0; i < 32; i = i + 1) begin
 			Regis[i] <= 0;
 		end
+		Regis[20] <= 32767;
 		Regis[29] <= 2996;
 	end
 	  
@@ -91,7 +92,7 @@ module RegisterFile(
 			Regis[17] <= 0;
 			Regis[18] <= 0;
 			Regis[19] <= 0;
-			Regis[20] <= 0;
+			Regis[20] <= 32767;
 			Regis[21] <= 0;
 			Regis[22] <= 0;
 			Regis[23] <= 0;
