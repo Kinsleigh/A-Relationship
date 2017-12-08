@@ -17,52 +17,59 @@ for i in range(0, 8):
 	print(str(i) + " " + str(end[i]))
 
 outfile1.write("11\n64\n4\n4\n")
-for i in range (start[0], end[0]):
-	outfile1.write(lines[i])
 for i in range(start[7] + (8*64), start[7] + (8*64) + 16):
 	outfile1.write(lines[i])
+for i in range (start[0], end[0]):
+	outfile1.write(lines[i])
+
 
 outfile2.write("11\n64\n4\n4\n")
-for i in range (start[1], end[1]):
-	outfile2.write(lines[i] )
 for i in range(start[7] + (8*64), start[7] + (8*64) + 16):
 	outfile2.write(lines[i])
 
+for i in range (start[1], end[1]):
+	outfile2.write(lines[i] )
+
 outfile3.write("11\n64\n4\n4\n")
-for i in range (start[2], end[2]):
-	outfile3.write(lines[i] )
 for i in range(start[7] + (8*64), start[7] + (8*64) + 16):
 	outfile3.write(lines[i])
+for i in range (start[2], end[2]):
+	outfile3.write(lines[i] )
+
 
 outfile4.write("11\n64\n4\n4\n")
-for i in range (start[3], end[3]):
-	outfile4.write(lines[i] )
 for i in range(start[7] + (8*64), start[7] + (8*64) + 16):
 	outfile4.write(lines[i])
+for i in range (start[3], end[3]):
+	outfile4.write(lines[i] )
+
 
 outfile5.write("11\n64\n4\n4\n")
-for i in range (start[4], end[4]):
-	outfile5.write(lines[i] )
 for i in range(start[7] + (8*64), start[7] + (8*64) + 16):
 	outfile5.write(lines[i])
+for i in range (start[4], end[4]):
+	outfile5.write(lines[i] )
+
 
 outfile6.write("11\n64\n4\n4\n")
-for i in range (start[5], end[5]):
-	outfile6.write(lines[i] )
 for i in range(start[7] + (8*64), start[7] + (8*64) + 16):
 	outfile6.write(lines[i])
+for i in range (start[5], end[5]):
+	outfile6.write(lines[i] )
+
 
 outfile7.write("11\n64\n4\n4\n")
-for i in range (start[6], end[6]):
-	outfile7.write(lines[i] )
 for i in range(start[7] + (8*64), start[7] + (8*64) + 16):
 	outfile7.write(lines[i])
+for i in range (start[6], end[6]):
+	outfile7.write(lines[i] )
 
 outfile8.write("8\n64\n4\n4\n")
-for i in range (start[7], start[7] + (8*64)):
-	outfile8.write(lines[i] )
 for i in range(start[7] + (8*64), start[7] + (8*64) + 16):
 	outfile8.write(lines[i])
+for i in range (start[7], start[7] + (8*64)):
+	outfile8.write(lines[i])
+
 
 infile.close()
 outfile8.close()
