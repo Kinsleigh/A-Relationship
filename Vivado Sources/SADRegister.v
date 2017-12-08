@@ -1,6 +1,7 @@
 `timescale 1ns / 1ps
 
-module SADRegister(MinSADIn, MinSADRowIn, MinSADColumnIn, MinSADOut, MinSADRowOut, MinSADColumnOut);
+module SADRegister(Clk, MinSADIn, MinSADRowIn, MinSADColumnIn, MinSADOut, MinSADRowOut, MinSADColumnOut);
+input Clk;
 	input [31:0] MinSADIn;
 	input [7:0] MinSADRowIn, MinSADColumnIn;
 	output reg [31:0] MinSADOut;
@@ -11,16 +12,22 @@ module SADRegister(MinSADIn, MinSADRowIn, MinSADColumnIn, MinSADOut, MinSADRowOu
 		MinSADRowOut <= 0;
 		MinSADColumnOut <= 0;
 	end
-
-	always @(*) begin
-		if (MinSADIn <= MinSADOut) begin
+	
+	always @(posedge Clk) begin
+		MinSADOut <= MinSADOut;
+		MinSADRowOut <= MinSADRowOut;
+		MinSADColumnOut <= MinSADColumnOut;	
+		
+		if (MinSADIn < MinSADOut) begin
 			MinSADOut <= MinSADIn;
 			MinSADRowOut <= MinSADRowIn;
 			MinSADColumnOut <= MinSADColumnIn;
-		end else begin
+		end 
+		/*
+		else begin
 			MinSADOut <= MinSADOut;
 			MinSADRowOut <= MinSADRowOut;
 			MinSADColumnOut <= MinSADColumnOut;			
-		end
+		end*/
 	end
 endmodule
