@@ -64,7 +64,7 @@ module RegisterFile(
 		for(i = 0; i < 32; i = i + 1) begin
 			Regis[i] <= 0;
 		end
-		Regis[29] <= 17196;
+		Regis[29] <= 2996;
 	end
 	  
 	always @(negedge Clk) begin
@@ -100,7 +100,7 @@ module RegisterFile(
 			Regis[26] <= 0;
 			Regis[27] <= 0;
 			Regis[28] <= 0;
-			Regis[29] <= 17196;
+			Regis[29] <= 2996;
 			Regis[30] <= 0;
 			Regis[31] <= 0;
 		end

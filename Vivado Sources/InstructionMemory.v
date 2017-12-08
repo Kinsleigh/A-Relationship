@@ -24,7 +24,7 @@ module InstructionMemory(Address, Instruction);
     input [31:0] Address; //Figure out size of address
     output reg [31:0] Instruction;
     
-    reg [31:0] memory [0:395];
+    reg [31:0] memory [0:173];
     integer i;
     initial begin
 		Instruction <= 0;

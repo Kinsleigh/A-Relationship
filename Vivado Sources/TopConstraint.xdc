@@ -1,7 +1,10 @@
 # The clock and its 
 set_property PACKAGE_PIN E3 [get_ports Clk]		
 set_property IOSTANDARD LVCMOS33 [get_ports Clk]
+# Competition Clock
 create_clock -period 16.3 -name Clk -waveform {0.000 8.15} [get_ports Clk]
+# Slowed Clock To Display Updates
+#create_clock -period 1000000 -name Clk -waveform {0.000 500000} [get_ports Clk]
 
 ##The reset (upper push button)
 set_property IOSTANDARD LVCMOS33 [get_ports Rst]

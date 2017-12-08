@@ -13,7 +13,7 @@ module SADRegister(MinSADIn, MinSADRowIn, MinSADColumnIn, MinSADOut, MinSADRowOu
 	end
 
 	always @(*) begin
-		if (FirstMinSAD <= MinSADOut) begin
+		if (MinSADIn <= MinSADOut) begin
 			MinSADOut <= MinSADIn;
 			MinSADRowOut <= MinSADRowIn;
 			MinSADColumnOut <= MinSADColumnIn;
