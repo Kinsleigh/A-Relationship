@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 ////////////////////////////////////////////////////////////////////////////////
 // ECE369 - Computer Architecture
-// Names: Kinsleigh Wong, Zahra Sadeq
+// Names: Kinsleigh Wong
 // Percent Effort : 50 - 50
 // Module - ALU32Bit.v
 // Description - 32-Bit wide arithmetic logic unit (ALU).
@@ -60,11 +60,10 @@
 // SLT (i.e., set on less than): ALUResult is '32'h000000001' if A < B.
 // 
 
-module ALU32Bit(ALUControl, A, B, ALUResult, Zero, UnsignedSignal);
+module ALU32Bit(ALUControl, A, B, ALUResult, Zero);
 
-	input [4:0] ALUControl; // control bits for ALU operation
+	input [2:0] ALUControl; // control bits for ALU operation
 	input [31:0] A, B;	    // inputs
-    input UnsignedSignal;
 	output reg [31:0] ALUResult;	// answer rd[15:11]
 	//output reg [63:0] ALUResultOne ; //this is 64 bits, first 32 is hi, second 32 is low
 	output Zero;	    // Zero=1 if ALUResult == 0
@@ -74,128 +73,35 @@ module ALU32Bit(ALUControl, A, B, ALUResult, Zero, UnsignedSignal);
 	end
 	
 	always @(*) begin
-        ALUResult <= 0;
-		if (ALUControl == 5'b00010) begin  //add
-		  //A is rs [25:21]
-		  //B is rt [20:16]
-			if (UnsignedSignal == 1)begin
-			     ALUResult <= A + B; 
-			end
-			else begin
-			     ALUResult <= $signed(A) + $signed(B); 
-			end
-			
+      ALUResult <= 0;
+		if (ALUControl == 3'b000) begin  //add
+	     ALUResult <= $signed(A) + $signed(B);
 		end
-		else if(ALUControl == 5'b00110) begin //sub
-		  //A is rs [25:21]
-		  //B is rt [20:16]
+		else if(ALUControl == 3'b001) begin //sub
 			ALUResult <= $signed(A)-$signed(B); 
 		end
-		else if(ALUControl == 5'b00000) begin //and
-		  //A is rs [25:21]
-		  //B is rt[20:16]
-			ALUResult <= A & B; 
-		end
-		else if(ALUControl == 5'b00001) begin //or
-		  //A is rs [25:21]
-		  //B is rt [20:16]
+		else if(ALUControl == 3'b010) begin //or
 			ALUResult <= A | B; 
 		end
-		else if (ALUControl == 5'b00111) begin //slt
-	      //A is rs [25:21]
-          //B is rt [20:16]
-		    if ($signed(A) < $signed(B)) begin //slt
+		else if (ALUControl == 3'b011) begin //slt
+	    if ($signed(A) < $signed(B)) //slt
 				ALUResult <= 1;
-			end
-			else begin
+			else
 				ALUResult <= 0;
-			end
 		end
-		else if(ALUControl == 5'b00100)begin //NOR
-		  //A is rs [25:21]
-          //B is rt [20:16]
-		    ALUResult <= ~(A|B);
-		end
-		else if (ALUControl == 5'b00101)begin //XOR
-		  //A is rs [25:21]
-          //B is rt [20:16]
+		else if (ALUControl == 3'b100)begin //XOR
 		    ALUResult <= (A^B);
 		end
-		else if(ALUControl == 5'b01000)begin // SLL
+		else if(ALUControl == 3'b101)begin // SLL
 		   //B is rt [20:16] 
 		   //A is sa [10:6]
-		    ALUResult <= B << A;
+		    ALUResult <= B << A[10:6];
 		end
-    else if(ALUControl == 5'b01010)begin // MOVN
-      //A is rs [25: 21]
+    else if( ALUControl == 3'b110) begin //SRA 
       //B is rt [20:16]
-        if(B != 0)begin
-            ALUResult <= A;
-        end
-    end
-        else if(ALUControl == 5'b01011 )begin // MOVZ
-          //A is rs [25: 21]
-          //B is rt [20:16]
-            if(B == 0)begin
-                ALUResult <= A;
-            end
-        end
-        else if(ALUControl == 5'b01101 )begin // SRL
-          //B is rt [20:16]
-          //A is sa [10:6]
-            ALUResult <= B>>A;
-        end 
-        else if(ALUControl == 5'b01110)begin  //ROTR
-          //B is rt [20:16]
-          //A is sa [10:6]
-          //y = (x << n) | (x >> (32 - n));
-           ALUResult <= (B << (32 - A)) | (B >> A);
-        end
-        else if( ALUControl == 5'b01111) begin //SRA 
-          //B is rt [20:16]
-          //A is sa [10:6]
-            ALUResult <= $signed(B) >>> A;
-        end          
-        else if(ALUControl == 5'b10100) begin  //SEB
-          //B is rt [20:16]     
-          if(B[7] == 0)begin
-              ALUResult  <= {24'h0 , B[7:0]};
-          end
-          else begin
-              ALUResult  <= {24'hffffff , B[7:0]};
-           //   ALUResult  <= {24'b1 , B[7:0]};
-          end
-        end
-        else if( ALUControl == 5'b10101)begin //SEH
-          //B is rt [20:16]    
-          if(B[15] == 0)begin
-              ALUResult  <= {16'b0,B[15:0]};
-          end
-          else begin
-              ALUResult  <= {16'b1,B[15:0]};
-          end
-          
-        end    
-        //////////////////////////// new /////////////////////////////////
-        else if(ALUControl == 5'b10001)begin //bgtz & blez 
-            if($signed(A) > 0)begin //bgtz
-                ALUResult <= 0;
-            end
-            else begin
-                ALUResult <= 1;
-            end
-        end
-        else if(ALUControl == 5'b11001)begin //bltz or bgez 
-            if($signed(A) < 0)begin // bltz
-                ALUResult <= 0;
-            end
-            else begin
-                ALUResult <= 1;
-            end
-        end
-        else if(ALUControl == 5'b10011)begin //LUI  
-            ALUResult <= {B[15:0], 16'b0}; 
-        end 
+      //A is sa [10:6]
+        ALUResult <= $signed(B) >>> A[10:6];
+    end          
 	end
 
     assign Zero = (ALUResult == 0);

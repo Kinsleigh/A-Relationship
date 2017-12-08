@@ -49,34 +49,67 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 module RegisterFile(
-    input Clk,
-    input [4:0] ReadRegister1, ReadRegister2, WriteRegister, 
-    input [31:0] WriteData, 
-    input RegWrite, 
-    output [31:0] ReadData1, ReadData2, 
-    output [31:0] v0, v1, s4);
+	input Clk, Rst,
+	input [4:0] ReadRegister1, ReadRegister2, WriteRegister, 
+	input [31:0] WriteData, 
+	input RegWrite, 
+	output [31:0] ReadData1, ReadData2, 
+	output [31:0] v0, v1, s4);
 
-    integer i;
+	integer i;
 
-    (*keep = "TRUE"*) reg [31:0] Regis [0:31];
-    
-    initial begin
-        for(i = 0; i < 32; i = i + 1) begin
+	(*keep = "TRUE"*) reg [31:0] Regis [0:31];
+	
+	initial begin
+		for(i = 0; i < 32; i = i + 1) begin
 			Regis[i] <= 0;
 		end
-		Regis[29] <= 4092;
-    end
-      
-    always @(negedge Clk) begin
-        if(RegWrite && WriteRegister != 0) begin
-            Regis[WriteRegister] <= WriteData;
-        end
-    end
-    
-    assign ReadData1 = Regis[ReadRegister1];
-    assign ReadData2 = Regis[ReadRegister2];
-    assign v0 = Regis[2];
-    assign v1 = Regis[3];
-    assign s4 = Regis[20];
+		Regis[29] <= 17196;
+	end
+	  
+	always @(negedge Clk) begin
+		if(RegWrite && WriteRegister != 0 && Rst == 0) begin
+			Regis[WriteRegister] <= WriteData;
+		end else if(Rst == 1) begin
+			Regis[0] <= 0;
+			Regis[1] <= 0;
+			Regis[2] <= 0;
+			Regis[3] <= 0;
+			Regis[4] <= 0;
+			Regis[5] <= 0;
+			Regis[6] <= 0;
+			Regis[7] <= 0;
+			Regis[8] <= 0;
+			Regis[9] <= 0;
+			Regis[10] <= 0;
+			Regis[11] <= 0;
+			Regis[12] <= 0;
+			Regis[13] <= 0;
+			Regis[14] <= 0;
+			Regis[15] <= 0;
+			Regis[16] <= 0;
+			Regis[17] <= 0;
+			Regis[18] <= 0;
+			Regis[19] <= 0;
+			Regis[20] <= 0;
+			Regis[21] <= 0;
+			Regis[22] <= 0;
+			Regis[23] <= 0;
+			Regis[24] <= 0;
+			Regis[25] <= 0;
+			Regis[26] <= 0;
+			Regis[27] <= 0;
+			Regis[28] <= 0;
+			Regis[29] <= 17196;
+			Regis[30] <= 0;
+			Regis[31] <= 0;
+		end
+	end
+	
+	assign ReadData1 = Regis[ReadRegister1];
+	assign ReadData2 = Regis[ReadRegister2];
+	assign v0 = Regis[2];
+	assign v1 = Regis[3];
+	assign s4 = Regis[20];
 
 endmodule

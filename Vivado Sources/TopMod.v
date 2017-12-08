@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 /*
-Names: Kinsleigh Wong, Zahra Sadeq
+Names: Kinsleigh Wong, Kobe Bryant
 Percent Effort : 50 - 50
 
 This is a 5 stage pipeline.
@@ -12,7 +12,7 @@ Module: TopMod
 module TopMod(
 	input Clk, Reset,
 	output wire [31:0] IF_PC_Out, WriteData,
-	output [31:0] v0, v1, s4);
+	output wire [31:0] v0, v1, s4);
 	
 	//Wires///////////////////////////////////////
 	wire UnsignedSignal;
@@ -21,33 +21,34 @@ module TopMod(
 	////////////////////////////////////
 	
 	//Wires for ID//////////////////////
-	wire [31:0] RD1, RD2,  SE_1, SE_2, SE_In, Se_sa_In, WriteData_F;
+	wire [31:0] RD1, RD2,  SE_1, SE_2, SE_In,  WriteData_F;
 	wire [4:0] WriteReg, WriteReg_F;
 	wire jORjal, jal_Control, j_Control, PCControl;
 		//Control Wires/////////////////
 		//ID
-		wire [3:0] AO;
-		wire AS, RD, MW, MR, PCS_In, RW, MtR, SEControl, Comp_ControlIn, LS_C, LS_SEC, C_RegWrite_F;
+		wire [1:0] AO;
+		wire AS, RD, MW, MR, PCS_In, RW, MtR, SEControl, Comp_ControlIn;
 		//EX
-		wire [3:0] C_AluOp;
-		wire C_RegDst, C_AluSrc, Comp_Control, LS_Cont, LS_SECont;
+		wire [1:0] C_AluOp;
+		wire C_RegDst, C_AluSrc, Comp_Control;
 		wire MW_Out, MR_Out, PCS_Out, RW_In, MtR_In;
 		//MEM
-		wire PCS, C_MemRead, C_MemWrite, LS_SEControl, LS_Control;
+		wire PCS, C_MemRead, C_MemWrite;
 		wire RW_Out, MtR_Out;
 		//WB
 		wire C_RegWrite, C_MemtoReg, WB_MemRead;
 		////////////////////////////////
 	////////////////////////////////////
 	
-	wire [31:0] NI_Ex, SE, SE_sa, ReadData1, JumpE_D, ReadData2;
+	wire [31:0] NI_Ex, SE, ReadData1, JumpE_D, ReadData2;
 	wire [4:0] WR_1, WR_2, EX_RegRs;
 	wire I_21;
 	wire jal_Cont, jORjal_D, j_Cont;
 	
 	//Wires for EX//////////////////////
 	wire [31:0] SE_left, Data1, Data2, AddRes_In, ALUResult_In, ALUResult_In_Ex, ReadData1A, ReadData2B, ReadData1B;
-	wire [4:0] WR_In_E, WR_In, AluSignal;
+	wire [4:0] WR_In_E, WR_In;
+	wire [2:0] AluSignal;
 	wire SAControl, WriteEnable, ZeroIn, ZeroIn1, ZeroNot, ALU_jr;
 	////////////////////////////////////
 	
@@ -62,12 +63,7 @@ module TopMod(
 	////////////////////////////////////
 	
 	wire [31:0] DM_ReadData, ALUResult;
-	
-	
-	wire [31:0]outputSignalLB, outputSignalLH, OutputLBLH;
-	//Wires for SB SH
-    wire [31:0]outputSignalSB, outputSignalSH, OutputSBSH, useless, useless2;
-    
+	    
     wire [1:0] E_MuxAlu_1, E_MuxAlu_2, /*E_MuxWriteData2,*/ E_jrMux;
     wire E_MuxWriteData;
 
@@ -110,21 +106,21 @@ module TopMod(
 	
 	//ID////////////////////////////////
 	 HazardDetection Hazard( MR_Out, RW_In ,ID_Instruction[5:0], ID_Instruction[31:26], WR_2 ,ID_Instruction[20:16], ID_Instruction[25:21],WR_1 , MuxEn, PCEn, IFIDEn, IDEXWrite, EXMEMWrite, PCS, FlushEnable, jORjal, ALU_jr, jORjal_D);
-	 Bus BusHazard( RW, MW, BusData);
+	 Bus BusHazard(RW, MW, BusData);
     Mux2 HazardMux(BusData, MuxEn, BusData_out); 
 
-	Controller Cont(ID_Instruction[31:26], ID_Instruction[16], RW, AS, RD, MW, MR, MtR, PCS_In, AO, SEControl, LS_SEC, LS_C, Comp_ControlIn, jal_Cont, j_Cont, jORjal_D, D_MemWrite_S);
+	Controller Cont(ID_Instruction[31:26], ID_Instruction[16], RW, AS, RD, MW, MR, MtR, PCS_In, AO, SEControl, Comp_ControlIn, jal_Cont, j_Cont, jORjal_D);
 	
 	JumpExtend IF_je(IF_NextAddress[31:28], ID_Instruction[25:0], JumpE_D);
 	
-	RegisterFile ID_RF(Clk, ID_Instruction[25:21], ID_Instruction[20:16], WriteReg, WriteData, C_RegWrite, RD1, RD2, v0, v1, s4);
-	SignExtension ID_SE(ID_Instruction[15:0], SE_1, SE_2);
-	Mux32 id_mux( SE_2, SE_1, SEControl, SE_In);
-	SignExtension_sa ID_SEsa(ID_Instruction[10:6], Se_sa_In);
+	RegisterFile ID_RF(Clk, Reset, ID_Instruction[25:21], ID_Instruction[20:16], WriteReg, WriteData, C_RegWrite, RD1, RD2, v0, v1, s4);
+	SignExtension ID_SE(ID_Instruction[15:0], SE_1);
+	ZeroExtension ID_ZE(ID_Instruction[15:0], SE_2);
+	Mux32 id_mux(SE_2, SE_1, SEControl, SE_In);
 	////////////////////////////////////
 		
 	//From A0 onwards it's all Control signals. 
-	ID_EX idex(Clk, ID_NextAddress, RD1, RD2, SE_In, Se_sa_In, ID_Instruction[20:16], ID_Instruction[15:11], ID_Instruction[21], NI_Ex, ReadData1, ReadData2, SE, SE_sa, WR_1, WR_2, I_21, AO, AS, RD, BusData_out[1], MR, PCS_In, BusData_out[0], MtR, C_AluOp, C_RegDst, C_AluSrc, MW_Out, MR_Out, PCS_Out, RW_In, MtR_In, Comp_ControlIn, Comp_Control, LS_C, LS_Cont, LS_SEC, LS_SECont, D_MemWrite_S, EX_MemWrite_S, j_Cont, j_Control, JumpE_D, JumpE, jORjal_D, jORjal, jal_Cont, jal_Control, ID_Instruction[25:21], EX_RegRs, IDEXWrite,FlushEnable);
+	ID_EX idex(Clk, ID_NextAddress, RD1, RD2, SE_In, ID_Instruction[20:16], ID_Instruction[15:11], NI_Ex, ReadData1, ReadData2, SE, WR_1, WR_2, AO, AS, RD, BusData_out[1], MR, PCS_In, BusData_out[0], MtR, C_AluOp, C_RegDst, C_AluSrc, MW_Out, MR_Out, PCS_Out, RW_In, MtR_In, Comp_ControlIn, Comp_Control, j_Cont, j_Control, JumpE_D, JumpE, jORjal_D, jORjal, jal_Cont, jal_Control, ID_Instruction[25:21], EX_RegRs, IDEXWrite, FlushEnable);
 	
 	//EX////////////////////////////////
 
@@ -132,11 +128,11 @@ module TopMod(
 
 	Mux32_2 EX_muxaa(ReadData1, ALUResult_Out, WriteData, E_MuxAlu_1, ReadData1A);
 	Mux32_2 EX_muxbb(ReadData2, ALUResult_Out, WriteData, E_MuxAlu_2, ReadData2B);
-	Mux32 EX_muxa(ReadData1A, SE_sa, SAControl, Data1); 
+	Mux32 EX_muxa(ReadData1A, SE, SAControl, Data1); 
 	Mux32 EX_muxb(ReadData2B, SE, C_AluSrc, Data2);
 	
-	ALUControl EX_AluCtrl(C_AluOp, SAControl, AluSignal, I_21, SE[6], SE[5:0], SE[9], UnsignedSignal, ALU_jr);
-	ALU32Bit EX_Alu(AluSignal, Data1, Data2, ALUResult_In_Ex, ZeroIn1, UnsignedSignal);
+	ALUControl EX_AluCtrl(C_AluOp, SE[5:0], SAControl,  ALU_jr, AluSignal);
+	ALU32Bit EX_Alu(AluSignal, Data1, Data2, ALUResult_In_Ex, ZeroIn1);
 	
 	Not EX_muxNOT(ZeroIn1, ZeroNot);
 	Mux1 EX_mux(ZeroIn1, ZeroNot, Comp_Control, ZeroIn);
@@ -152,20 +148,14 @@ module TopMod(
 	
 	////////////////////////////////////
 	//MW_Out and onwards is for Control signals. 
-	EX_MEM exmem(Clk, ReadData2B, ALUResult_In, WR_In, ReadData2_OutA, ALUResult_Out, WR_Out,/**/ MW_Out, MR_Out, RW_In, MtR_In, C_MemRead, C_MemWrite, RW_Out, MtR_Out, LS_Cont, LS_Control, LS_SECont, LS_SEControl, EX_MemWrite_S, C_MemWrite_S);
+	EX_MEM exmem(Clk, ReadData2B, ALUResult_In, WR_In, ReadData2_OutA, ALUResult_Out, WR_Out,/**/ MW_Out, MR_Out, RW_In, MtR_In, C_MemRead, C_MemWrite, RW_Out, MtR_Out);
 	
 	//MEM///////////////////////////////
 	Mux32 MEM_mux(ReadData2_OutA, WriteData, E_MuxWriteData, ReadData2_Out);
 
-	DataMemory MEM_dm(Clk, ALUResult_Out, ReadData2_Out, C_MemWrite, C_MemWrite_S, C_MemRead, DM_RD);
-	
-	//The series of muxes for the loads (lb, lh)
-	SignExtendLB LB(DM_RD[7:0], outputSignalLB);
-    SignExtension LH(DM_RD[15:0], outputSignalLH, useless2);
-    Mux32 LBLH(outputSignalLB, outputSignalLH, LS_SEControl, OutputLBLH);
-    Mux32 DM_load(DM_RD, OutputLBLH, LS_Control, DM_ReadData_1);
+	DataMemory MEM_dm(Clk, ALUResult_Out, ReadData2_Out, C_MemWrite, C_MemRead, DM_RD);
 	////////////////////////////////////
-	MEM_WB memwb(Clk, DM_ReadData_1, ALUResult_Out, WR_Out, DM_ReadData, ALUResult, WriteReg, RW_Out, MtR_Out, C_RegWrite, C_MemtoReg, C_MemRead, WB_MemRead);
+	MEM_WB memwb(Clk, DM_RD, ALUResult_Out, WR_Out, DM_ReadData, ALUResult, WriteReg, RW_Out, MtR_Out, C_RegWrite, C_MemtoReg, C_MemRead, WB_MemRead);
 	
 	//WB////////////////////////////////
 	Mux32 WB_mux(DM_ReadData, ALUResult, C_MemtoReg, WriteData);

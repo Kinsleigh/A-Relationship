@@ -5,16 +5,16 @@
 // Module - SignExtension.v
 // Description - Sign extension module.
 ////////////////////////////////////////////////////////////////////////////////
-module SignExtension(
-	input [15:0]in, 
-	output reg [31:0] out);
+module ZeroExtension(
+    input [15:0]in, 
+    output reg [31:0] out);
     
     initial begin
         out <= 0;
     end
     
     always@(*)begin
-        out <= {{16{in[15]}}, in};
-	end
-		
+        out <= {16'd0, in};
+    end
+        
 endmodule
