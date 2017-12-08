@@ -16,49 +16,49 @@ for i in range(0, 8):
 	end.append(start[i] + (11 * 64))
 	print(str(i) + " " + str(end[i]))
 
-outfile1.write("B\40\n4\n4\n")
+outfile1.write("B\n40\n4\n4\n")
 for i in range(start[7] + (8*64), start[7] + (8*64) + 16):
 	outfile1.write(lines[i])
 for i in range (start[0], end[0]):
 	outfile1.write(lines[i])
 
 
-outfile2.write("B\40\n4\n4\n")
+outfile2.write("B\n40\n4\n4\n")
 for i in range(start[7] + (8*64), start[7] + (8*64) + 16):
 	outfile2.write(lines[i])
 
 for i in range (start[1], end[1]):
 	outfile2.write(lines[i] )
 
-outfile3.write("B\40\n4\n4\n")
+outfile3.write("B\n40\n4\n4\n")
 for i in range(start[7] + (8*64), start[7] + (8*64) + 16):
 	outfile3.write(lines[i])
 for i in range (start[2], end[2]):
 	outfile3.write(lines[i] )
 
 
-outfile4.write("B\40\n4\n4\n")
+outfile4.write("B\n40\n4\n4\n")
 for i in range(start[7] + (8*64), start[7] + (8*64) + 16):
 	outfile4.write(lines[i])
 for i in range (start[3], end[3]):
 	outfile4.write(lines[i] )
 
 
-outfile5.write("B\40\n4\n4\n")
+outfile5.write("B\n40\n4\n4\n")
 for i in range(start[7] + (8*64), start[7] + (8*64) + 16):
 	outfile5.write(lines[i])
 for i in range (start[4], end[4]):
 	outfile5.write(lines[i] )
 
 
-outfile6.write("B\40\n4\n4\n")
+outfile6.write("B\n40\n4\n4\n")
 for i in range(start[7] + (8*64), start[7] + (8*64) + 16):
 	outfile6.write(lines[i])
 for i in range (start[5], end[5]):
 	outfile6.write(lines[i] )
 
 
-outfile7.write("B\40\n4\n4\n")
+outfile7.write("B\n40\n4\n4\n")
 for i in range(start[7] + (8*64), start[7] + (8*64) + 16):
 	outfile7.write(lines[i])
 for i in range (start[6], end[6]):
