@@ -55,7 +55,7 @@ module TopWithDisplay(Clk, Rst, out7, en_out);
 	wire [7:0] MinSADRowIn, MinSADColumnIn;
 	wire [31:0] MinSADOut;
 	wire [7:0] MinSADRowOut, MinSADColumnOut;
-	SADRegister SADReg(Clk, MinSADIn, MinSADRowIn, MinSADColumnIn, MinSADOut, MinSADRowOut, MinSADColumnOut);
+	SADRegister SADReg(Clk, Rst, MinSADIn, MinSADRowIn, MinSADColumnIn, MinSADOut, MinSADRowOut, MinSADColumnOut);
 	
 	// ROW OFFSET ADDERS
 	

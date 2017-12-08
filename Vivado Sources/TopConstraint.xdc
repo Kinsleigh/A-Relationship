@@ -2,7 +2,7 @@
 set_property PACKAGE_PIN E3 [get_ports Clk]		
 set_property IOSTANDARD LVCMOS33 [get_ports Clk]
 # Competition Clock
-create_clock -period 21.0 -name Clk -waveform {0.000 10.5} [get_ports Clk]
+create_clock -period 29 -name Clk -waveform {0.000 14.500} [get_ports Clk]
 # Slowed Clock To Display Updates
 #create_clock -period 1000000 -name Clk -waveform {0.000 500000} [get_ports Clk]
 
