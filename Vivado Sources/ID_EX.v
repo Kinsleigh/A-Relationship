@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 /*
-// Names: Kinsleigh Wong, Zahra Sadeq
+// Names: Kinsleigh Wong, Coby Allred
 // Percent Effort : 50 - 50
 This module implements the ID/EX register  file. 
 
