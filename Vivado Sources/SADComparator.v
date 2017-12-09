@@ -13,7 +13,7 @@ module SADComparator(FirstMinSAD, FirstMinSADRow, FirstMinSADColumn, SecondMinSA
 	end
 
 	always @(*) begin
-		if (FirstMinSAD <= SecondMinSAD) begin
+		if (FirstMinSAD < SecondMinSAD) begin
 			MinSADOut <= FirstMinSAD;
 			MinSADRowOut <= FirstMinSADRow;
 			MinSADColumnOut <= FirstMinSADColumn;
